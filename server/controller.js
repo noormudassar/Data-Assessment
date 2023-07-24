@@ -235,4 +235,54 @@ module.exports = {
       })
       .catch((err) => console.log("error seeding DB", err));
   },
+
+  getCountries: (req, res) => {
+    sequelize.query(`select * from countries`).then((dbRes) => {
+      res
+        .status(200)
+        .send(dbRes[0])
+        .catch((error) => {
+          console.log(error);
+          res.status(500).send(error);
+        });
+    });
+  },
+
+  createCity: (req, res) => {
+    const { name, rating, countryId } = req.body;
+
+    sequelize
+      .query(
+        `
+    insert into cities (name, rating, country_id)
+    values ('${name}', '${rating}', '${countryId}')
+    `
+      )
+      .then((dbRes) => {
+        res.status(200).send(dbRes[0]);
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(500).send(error);
+      });
+  },
+
+  getCities: (req, res) => {
+    sequelize
+      .query(
+        `
+    select city_id, ci.name as city, co.country_id, co.name as contry
+    from cities as ci
+    join countries as co
+    on ci.country_id = co.country_id
+    `
+      )
+      .then((dbRes) => {
+        res.status(200).send(dbRes[0]);
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(500).send(error);
+      });
+  },
 };
