@@ -29,7 +29,7 @@ module.exports = {
                 name varchar,
                 rating integer,
                 country_id integer references countries(country_id)
-           )
+           );
 
             insert into countries (name)
             values ('Afghanistan'),
@@ -244,13 +244,11 @@ module.exports = {
     `
       )
       .then((dbRes) => {
-        res
-          .status(200)
-          .send(dbRes[0])
-          .catch((error) => {
-            console.log(error);
-            res.status(500).send(error);
-          });
+        res.status(200).send(dbRes[0]);
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(500).send(error);
       });
   },
 
@@ -279,7 +277,8 @@ module.exports = {
         `
     select city_id, ci.name as city, 
     co.country_id, 
-    co.name as contry
+    co.name as country,
+    rating
     from cities as ci
     join countries as co
     on ci.country_id = co.country_id
